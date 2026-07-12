@@ -68,9 +68,10 @@ export const promoteEmployee = async (req: Request, res: Response): Promise<void
   }
 };
 
+// ... existing getMasterData and promoteEmployee ...
 
 export const createDepartment = async (req: Request, res: Response): Promise<void> => {
-  const { name, status } = req.body;
+  const { name, status, head_id } = req.body; // Added head_id
 
   if (!name) {
     res.status(400).json({ error: 'Department name is required.' });
@@ -79,20 +80,40 @@ export const createDepartment = async (req: Request, res: Response): Promise<voi
 
   const connection = await db.getConnection();
   try {
-    await connection.beginTransaction(); // ACID: Start
+    await connection.beginTransaction(); 
 
     await connection.query(
-      `INSERT INTO departments (name, status) VALUES (?, ?)`,
-      [name, status || 'Active']
+      `INSERT INTO departments (name, status, head_id) VALUES (?, ?, ?)`,
+      [name, status || 'Active', head_id || null] // Insert head_id
     );
 
-    await connection.commit(); // ACID: Commit
-    console.log(`[Admin API] New department created: ${name}`);
+    await connection.commit(); 
     res.status(201).json({ message: 'Department created successfully.' });
   } catch (error: any) {
-    await connection.rollback(); // ACID: Rollback on error
-    console.error('[Admin API] Failed to create department:', error);
+    await connection.rollback(); 
     res.status(500).json({ error: 'Database error while creating department.' });
+  } finally {
+    connection.release();
+  }
+};
+
+export const deleteDepartment = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const connection = await db.getConnection();
+  
+  try {
+    await connection.beginTransaction();
+    await connection.query(`DELETE FROM departments WHERE department_id = ?`, [id]);
+    await connection.commit();
+    res.status(200).json({ message: 'Department deleted successfully.' });
+  } catch (error: any) {
+    await connection.rollback();
+    // Catch Foreign Key Constraint Error (MySQL errno 1451)
+    if (error.errno === 1451) {
+      res.status(409).json({ error: 'Cannot delete: This department is currently assigned to users or assets.' });
+    } else {
+      res.status(500).json({ error: 'Failed to delete department.' });
+    }
   } finally {
     connection.release();
   }
@@ -100,7 +121,6 @@ export const createDepartment = async (req: Request, res: Response): Promise<voi
 
 export const createCategory = async (req: Request, res: Response): Promise<void> => {
   const { name } = req.body;
-
   if (!name) {
     res.status(400).json({ error: 'Category name is required.' });
     return;
@@ -108,20 +128,34 @@ export const createCategory = async (req: Request, res: Response): Promise<void>
 
   const connection = await db.getConnection();
   try {
-    await connection.beginTransaction(); // ACID: Start
-
-    await connection.query(
-      `INSERT INTO asset_categories (name) VALUES (?)`,
-      [name]
-    );
-
-    await connection.commit(); // ACID: Commit
-    console.log(`[Admin API] New category created: ${name}`);
+    await connection.beginTransaction();
+    await connection.query(`INSERT INTO asset_categories (name) VALUES (?)`, [name]);
+    await connection.commit();
     res.status(201).json({ message: 'Category created successfully.' });
   } catch (error: any) {
-    await connection.rollback(); // ACID: Rollback on error
-    console.error('[Admin API] Failed to create category:', error);
+    await connection.rollback();
     res.status(500).json({ error: 'Database error while creating category.' });
+  } finally {
+    connection.release();
+  }
+};
+
+export const deleteCategory = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const connection = await db.getConnection();
+  
+  try {
+    await connection.beginTransaction();
+    await connection.query(`DELETE FROM asset_categories WHERE category_id = ?`, [id]);
+    await connection.commit();
+    res.status(200).json({ message: 'Category deleted successfully.' });
+  } catch (error: any) {
+    await connection.rollback();
+    if (error.errno === 1451) {
+      res.status(409).json({ error: 'Cannot delete: There are assets currently registered under this category.' });
+    } else {
+      res.status(500).json({ error: 'Failed to delete category.' });
+    }
   } finally {
     connection.release();
   }
