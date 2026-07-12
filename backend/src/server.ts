@@ -6,6 +6,9 @@ import authRoutes from './routes/authRoutes';
 import dashboardRoutes from './routes/dashboardRoutes'; //
 // Add this import at the top
 import adminRoutes from './routes/adminRoutes';
+// this is new added 
+// import auditRoutes from './routes/auditRoutes'; 
+
 
 
 
@@ -32,6 +35,8 @@ app.use('/api/dashboard', dashboardRoutes);
 
 
 app.use('/api/admin', adminRoutes);
+// this is new added
+// app.use('/api/audit', auditRoutes);
 
 // Basic Health Check Route
 app.get('/', (req: Request, res: Response) => {
