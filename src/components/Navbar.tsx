@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { cn } from '@/lib/utils'
 import { useTheme } from '@/lib/theme'
-import { Menu, X, Moon, Sun, LogIn } from 'lucide-react'
+import { Menu, X, Moon, Sun, LogIn, UserPlus } from 'lucide-react'
 
 const navLinks = [
   { label: 'Features', href: '#features' },
@@ -93,10 +93,17 @@ export default function Navbar() {
 
           <a
             href='#auth'
-            className='hidden sm:inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-all'
+            className='hidden sm:inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border bg-card hover:bg-muted/50 transition-all'
           >
             <LogIn size={14} />
             Sign In
+          </a>
+          <a
+            href='#auth'
+            className='hidden sm:inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-all shadow-sm'
+          >
+            <UserPlus size={14} />
+            Sign Up
           </a>
 
           <button
@@ -124,10 +131,17 @@ export default function Navbar() {
           <div className='border-t pt-3 flex flex-col gap-2'>
             <a
               href='#auth'
-              className='text-sm font-medium px-4 py-2.5 rounded-lg bg-primary text-primary-foreground text-center transition-all'
+              className='text-sm font-medium px-4 py-2.5 rounded-lg border bg-card text-center transition-all'
               onClick={() => setMobileOpen(false)}
             >
               Sign In
+            </a>
+            <a
+              href='#auth'
+              className='text-sm font-medium px-4 py-2.5 rounded-lg bg-primary text-primary-foreground text-center transition-all'
+              onClick={() => setMobileOpen(false)}
+            >
+              Sign Up
             </a>
           </div>
         </div>
