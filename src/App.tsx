@@ -14,6 +14,13 @@ import Dashboard from '@/components/dashboard/Dashboard'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 
 import OrganizationSetup from '@/components/admin/OrganizationSetup';
+import AssetDirectory from '@/components/assets/AssetDirectory';
+import AllocationTransferScreen from '@/components/workflows/AllocationTransferScreen';
+import AuditCycleManager from '@/components/audits/AuditCycleManager';
+import ReportsAnalytics from '@/components/insights/ReportsAnalytics';
+import ActivityFeed from '@/components/insights/ActivityFeed';
+import ResourceBooking from './components/bookings/ResourceBooking';
+import MaintenanceKanban from './components/maintenance/MaintenanceKanban';
 
 
 
@@ -70,7 +77,50 @@ export default function App() {
                   </ProtectedRoute>
                 } 
             />
-           
+            <Route 
+                  path="/assets" 
+                  element={
+                    <ProtectedRoute>
+                      <DashboardLayout>
+                        <AssetDirectory />
+                      </DashboardLayout>
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                    path="/allocations" 
+                    element={
+                      <ProtectedRoute>
+                        <DashboardLayout>
+                          <AllocationTransferScreen />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/bookings" 
+                    element={
+                      <ProtectedRoute>
+                        <DashboardLayout>
+                          <ResourceBooking />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="/maintenance" 
+                    element={
+                      <ProtectedRoute>
+                        <DashboardLayout>
+                          <MaintenanceKanban />
+                        </DashboardLayout>
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route path="/audit" element={<ProtectedRoute><DashboardLayout><AuditCycleManager /></DashboardLayout></ProtectedRoute>} />
+                  <Route path="/reports" element={<ProtectedRoute><DashboardLayout><ReportsAnalytics /></DashboardLayout></ProtectedRoute>} />
+                  <Route path="/notifications" element={<ProtectedRoute><DashboardLayout><ActivityFeed /></DashboardLayout></ProtectedRoute>} />
+                               
           </Routes>
         </div>
       </Router>

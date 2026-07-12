@@ -6,6 +6,16 @@ import authRoutes from './routes/authRoutes';
 import dashboardRoutes from './routes/dashboardRoutes'; //
 // Add this import at the top
 import adminRoutes from './routes/adminRoutes';
+import assetRoutes from './routes/assetRoutes'; // 
+import allocationRoutes from './routes/allocationRoutes';
+import auditRoutes from './routes/auditRoutes';
+import insightRoutes from './routes/insightRoutes';
+// backend/src/server.ts
+import bookingRoutes from './routes/bookingRoutes';
+
+// ...
+
+// ...
 
 
 
@@ -32,6 +42,12 @@ app.use('/api/dashboard', dashboardRoutes);
 
 
 app.use('/api/admin', adminRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/assets', assetRoutes); //
+app.use('/api/allocations', allocationRoutes);
+app.use('/api/audits', auditRoutes);
+app.use('/api/insights', insightRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 // Basic Health Check Route
 app.get('/', (req: Request, res: Response) => {

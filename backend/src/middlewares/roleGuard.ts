@@ -31,3 +31,28 @@ export const requireAdmin = (req: AuthRequest, res: Response, next: NextFunction
     res.status(401).json({ error: 'Invalid or expired session token.' });
   }
 };
+
+export const requireAssetManagerOrAdmin = (req: AuthRequest, res: Response, next: NextFunction): void => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      res.status(401).json({ error: 'Authentication required.' });
+      return;
+    }
+
+    const token = authHeader.split(' ')[1];
+    const decoded = jwt.verify(token, JWT_SECRET) as any;
+
+    // Allow both Admins and Asset Managers
+    if (decoded.role !== 'Admin' && decoded.role !== 'Asset Manager') {
+      console.warn(`[Security] Unauthorized asset registration attempt by User ID ${decoded.userId}`);
+      res.status(403).json({ error: 'Forbidden: Asset Manager or Administrator access required.' });
+      return;
+    }
+
+    req.user = decoded;
+    next();
+  } catch (error) {
+    res.status(401).json({ error: 'Invalid or expired session token.' });
+  }
+};
