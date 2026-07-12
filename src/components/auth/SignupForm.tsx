@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function SignupForm() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -25,8 +27,12 @@ export default function SignupForm() {
         throw new Error(data.error || 'Signup failed');
       }
 
-      setSuccess('Account created! You can now log in as an Employee.');
+      setSuccess('Account created! Redirecting to login...');
       setFormData({ name: '', email: '', password: '' });
+
+      setTimeout(() => {
+        navigate('/login');
+      }, 1000);
     } catch (err: any) {
       setError(err.message);
     } finally {

@@ -33,7 +33,7 @@ Ensure you have [Node.js](https://nodejs.org/) installed on your local machine.
 **1. Clone the repository:**
 ```bash
 git clone <repository-url>
-cd assetflow-client
+cd AssetFLow
 ```
 
 **2. Install dependencies:**
