@@ -78,3 +78,76 @@ export const closeAuditCycle = async (req: Request, res: Response): Promise<void
     connection.release();
   }
 };
+// this new added code is for the dashboard controller to handle audit cycle and asset verification functionalities.
+
+export const getActiveAuditDashboard = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    
+    // Replace with your preferred ORM/Query builder execution
+    const audit = await (db as any).auditCycle.findUnique({
+      where: { id },
+      include: { assets: true },
+    });
+
+    if (!audit) {
+      res.status(404).json({ message: 'Audit cycle not found' });
+      return;
+    }
+
+    const flaggedAssets = audit.assets.filter(
+      (asset: any) => asset.verificationStatus === 'MISSING' || asset.verificationStatus === 'DAMAGED'
+    );
+
+    res.json({
+      id: audit.id,
+      name: audit.name,
+      startDate: audit.startDate,
+      endDate: audit.endDate,
+      auditors: audit.auditors,
+      status: audit.status,
+      assets: audit.assets,
+      flaggedCount: flaggedAssets.length,
+      discrepancyReportGenerated: flaggedAssets.length > 0,
+    });
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+export const updateAssetVerification = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { assetCode, verificationStatus } = req.body;
+    
+    const validStatuses = ['VERIFIED', 'MISSING', 'DAMAGED', 'PENDING'];
+    if (!validStatuses.includes(verificationStatus)) {
+      res.status(400).json({ message: 'Invalid verification status value' });
+      return;
+    }
+
+    const updatedAsset = await (db as any).auditAsset.update({
+      where: {
+        auditCycleId_assetCode: { auditCycleId: id, assetCode },
+      },
+      data: { verificationStatus },
+    });
+
+    res.json(updatedAsset);
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
+
+export const closeAuditCycleById = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const closedAudit = await (db as any).auditCycle.update({
+      where: { id },
+      data: { status: 'CLOSED' },
+    });
+    res.json({ message: 'Audit cycle successfully closed', closedAudit });
+  } catch (error) {
+    res.status(500).json({ error: (error as Error).message });
+  }
+};
