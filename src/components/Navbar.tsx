@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom' // <-- Added Link import
 import gsap from 'gsap'
 import { cn } from '@/lib/utils'
 import { useTheme } from '@/lib/theme'
@@ -63,12 +64,12 @@ export default function Navbar() {
       )}
     >
       <div className='max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between'>
-        <a href='#' className='flex items-center gap-2 shrink-0'>
+        <Link to='/' className='flex items-center gap-2 shrink-0'>
           <div className='w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center'>
             <span className='text-white font-bold text-sm'>AF</span>
           </div>
           <span className='font-semibold text-lg tracking-tight hidden sm:inline'>AssetFlow</span>
-        </a>
+        </Link>
 
         <nav ref={linksRef} className='hidden md:flex items-center gap-6 lg:gap-8'>
           {navLinks.map((link) => (
@@ -91,20 +92,21 @@ export default function Navbar() {
             {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
           </button>
 
-          <a
-            href='#auth'
+          {/* Changed to React Router <Link> components */}
+          <Link
+            to='/login'
             className='hidden sm:inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg border bg-card hover:bg-muted/50 transition-all'
           >
             <LogIn size={14} />
             Sign In
-          </a>
-          <a
-            href='#auth'
+          </Link>
+          <Link
+            to='/signup'
             className='hidden sm:inline-flex items-center gap-2 text-sm font-medium px-4 py-2 rounded-lg bg-primary text-primary-foreground hover:opacity-90 transition-all shadow-sm'
           >
             <UserPlus size={14} />
             Sign Up
-          </a>
+          </Link>
 
           <button
             className='md:hidden p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-all'
@@ -129,20 +131,21 @@ export default function Navbar() {
             </a>
           ))}
           <div className='border-t pt-3 flex flex-col gap-2'>
-            <a
-              href='#auth'
+            {/* Changed Mobile buttons to <Link> components */}
+            <Link
+              to='/login'
               className='text-sm font-medium px-4 py-2.5 rounded-lg border bg-card text-center transition-all'
               onClick={() => setMobileOpen(false)}
             >
               Sign In
-            </a>
-            <a
-              href='#auth'
+            </Link>
+            <Link
+              to='/signup'
               className='text-sm font-medium px-4 py-2.5 rounded-lg bg-primary text-primary-foreground text-center transition-all'
               onClick={() => setMobileOpen(false)}
             >
               Sign Up
-            </a>
+            </Link>
           </div>
         </div>
       )}

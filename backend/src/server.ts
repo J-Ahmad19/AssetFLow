@@ -3,18 +3,28 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { testDBConnection } from './config/db';
 import authRoutes from './routes/authRoutes';
+import dashboardRoutes from './routes/dashboardRoutes'; // <-- 1. Add this import
 
 // Load environment variables from .env
 dotenv.config();
 
 // Initialize Express app
 const app: Application = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5005;
 
 // Global Middlewares
-app.use(cors());
-app.use(express.json()); // Parses incoming JSON requests
+app.use(cors({
+  origin: 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
+app.use(express.json());
+
+// API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/dashboard', dashboardRoutes); // <-- 2. Add this line
 
 // Basic Health Check Route
 app.get('/', (req: Request, res: Response) => {
@@ -27,16 +37,13 @@ app.get('/', (req: Request, res: Response) => {
 // Bootstrapping the Server
 const startServer = async () => {
   try {
-    // 1. Verify the database connection pool is healthy
     await testDBConnection();
-
-    // 2. Start listening for HTTP requests
     app.listen(PORT, () => {
       console.log(`🚀 Server successfully started on http://localhost:${PORT}`);
     });
   } catch (error) {
     console.error('❌ Failed to start the server. Exiting process:', error);
-    process.exit(1); // Exit if the DB is unreachable
+    process.exit(1);
   }
 };
 
