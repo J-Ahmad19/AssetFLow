@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Building2, Package, Users, ShieldAlert, Check, Plus, X } from 'lucide-react';
 
-interface Department { department_id: number; name: string; head_name: string | null; status: string; }
+interface Department { 
+  department_id: number; 
+  name: string; 
+  head_name: string | null; 
+  parent_name?: string | null; 
+  status: string; 
+}
 interface Category { category_id: number; name: string; }
 interface Employee { user_id: number; name: string; email: string; role: string; status: string; }
 
@@ -140,13 +146,19 @@ export default function OrganizationSetup() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
               <thead className="bg-muted text-muted-foreground text-xs uppercase font-semibold">
-                <tr><th className="px-6 py-4">ID</th><th className="px-6 py-4">Department Name</th><th className="px-6 py-4">Status</th></tr>
+                <tr>
+                  <th className="px-6 py-4">Department</th>
+                  <th className="px-6 py-4">Head</th>
+                  <th className="px-6 py-4">Parent Dept</th>
+                  <th className="px-6 py-4">Status</th>
+                </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {departments.map(dept => (
                   <tr key={dept.department_id} className="hover:bg-muted/50 transition-colors">
-                    <td className="px-6 py-4 text-muted-foreground">#{dept.department_id}</td>
                     <td className="px-6 py-4 font-medium">{dept.name}</td>
+                    <td className="px-6 py-4 text-muted-foreground">{dept.head_name || '--'}</td>
+                    <td className="px-6 py-4 text-muted-foreground">{dept.parent_name || '--'}</td>
                     <td className="px-6 py-4">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${dept.status === 'Active' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-destructive/10 text-destructive'}`}>
                         {dept.status}
@@ -154,7 +166,7 @@ export default function OrganizationSetup() {
                     </td>
                   </tr>
                 ))}
-                {departments.length === 0 && <tr><td colSpan={3} className="px-6 py-8 text-center text-muted-foreground">No departments configured yet.</td></tr>}
+                {departments.length === 0 && <tr><td colSpan={4} className="px-6 py-8 text-center text-muted-foreground">No departments configured yet.</td></tr>}
               </tbody>
             </table>
           </div>
@@ -180,7 +192,7 @@ export default function OrganizationSetup() {
           </div>
         )}
 
-        {/* Employees Tab (Unchanged) */}
+        {/* Employees Tab */}
         {activeTab === 'employees' && (
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-left">
