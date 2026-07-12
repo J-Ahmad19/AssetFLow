@@ -3,7 +3,11 @@ import { useNavigate } from 'react-router-dom';
 
 export default function SignupForm() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -17,7 +21,9 @@ export default function SignupForm() {
     try {
       const response = await fetch('http://localhost:5005/api/auth/signup', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(formData),
       });
 
@@ -28,7 +34,11 @@ export default function SignupForm() {
       }
 
       setSuccess('Account created! Redirecting to login...');
-      setFormData({ name: '', email: '', password: '' });
+      setFormData({
+        name: '',
+        email: '',
+        password: '',
+      });
 
       setTimeout(() => {
         navigate('/login');
@@ -42,42 +52,72 @@ export default function SignupForm() {
 
   return (
     <div className="max-w-md w-full mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Create Account</h2>
-      {error && <div className="p-3 mb-4 text-sm text-red-700 bg-red-100 rounded">{error}</div>}
-      {success && <div className="p-3 mb-4 text-sm text-green-700 bg-green-100 rounded">{success}</div>}
-      
+      <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+        Create Account
+      </h2>
+
+      {error && (
+        <div className="p-3 mb-4 text-sm text-red-700 bg-red-100 rounded">
+          {error}
+        </div>
+      )}
+
+      {success && (
+        <div className="p-3 mb-4 text-sm text-green-700 bg-green-100 rounded">
+          {success}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Full Name</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Full Name
+          </label>
           <input
             type="text"
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter your full name"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-gray-800 placeholder:text-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, name: e.target.value })
+            }
           />
         </div>
+
         <div>
-          <label className="block text-sm font-medium text-gray-700">Email</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Email
+          </label>
           <input
             type="email"
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter your work email"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-gray-800 placeholder:text-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
           />
         </div>
+
         <div>
-          <label className="block text-sm font-medium text-gray-700">Password</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Password
+          </label>
           <input
             type="password"
             required
             minLength={6}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Create a secure password"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-gray-800 placeholder:text-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
           />
         </div>
+
         <button
           type="submit"
           disabled={loading}

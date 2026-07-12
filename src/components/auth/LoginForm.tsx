@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 
 export default function LoginForm() {
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -13,7 +17,9 @@ export default function LoginForm() {
     try {
       const response = await fetch('http://localhost:5005/api/auth/login', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(formData),
       });
 
@@ -23,13 +29,10 @@ export default function LoginForm() {
         throw new Error(data.error || 'Login failed');
       }
 
-      // Store token for session validation[cite: 4]
       localStorage.setItem('assetflow_token', data.token);
       localStorage.setItem('assetflow_user', JSON.stringify(data.user));
-      
-      // Redirect to Dashboard
+
       window.location.href = '/dashboard';
-      
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -39,37 +42,60 @@ export default function LoginForm() {
 
   return (
     <div className="max-w-md w-full mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Login to AssetFlow</h2>
-      {error && <div className="p-3 mb-4 text-sm text-red-700 bg-red-100 rounded">{error}</div>}
-      
+      <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+        Login to AssetFlow
+      </h2>
+
+      {error && (
+        <div className="p-3 mb-4 text-sm text-red-700 bg-red-100 rounded">
+          {error}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Email</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Email
+          </label>
           <input
             type="email"
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter your work email"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-gray-800 placeholder:text-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
           />
         </div>
+
         <div>
-          <label className="block text-sm font-medium text-gray-700">Password</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Password
+          </label>
           <input
             type="password"
             required
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+            placeholder="Enter your password"
+            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-gray-800 placeholder:text-gray-500 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
             value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
           />
         </div>
+
         <div className="flex items-center justify-between">
           <div className="text-sm">
-            <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
+            <a
+              href="#"
+              className="font-medium text-blue-600 hover:text-blue-500"
+            >
               Forgot your password?
             </a>
           </div>
         </div>
+
         <button
           type="submit"
           disabled={loading}
