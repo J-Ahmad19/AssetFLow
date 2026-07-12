@@ -41,9 +41,31 @@ cd assetflow-client
 npm install
 ```
 
-**3. Start the development server:**
+**3. Set up the MySQL database:**
+
+- Ensure **MySQL** is running on your local machine.
+- Create a new database named `assetflow`.
+
+```sql
+CREATE DATABASE assetflow;
+```
+
+**4. Configure environment variables:**
+
+To run this project, you will need to add the following environment variables to your `.env` file in the `backend/` directory:
+
+```env
+PORT=5000
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your_mysql_password
+DB_NAME=assetflow
+```
+
+**5. Start the development server:**
 ```bash
 npm run dev
+```
 ```
 
 ---
