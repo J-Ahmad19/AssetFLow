@@ -1,25 +1,62 @@
 # AssetFlow: Enterprise Asset & Resource Management System
 
-AssetFlow is a centralized ERP platform designed to simplify and digitize how organizations track, allocate, and maintain their physical assets and shared resources[cite: 1]. It aims to reduce manual tracking inefficiencies by enabling structured asset lifecycles, centralized resource booking, and real-time visibility into who holds what, where it is, and its condition[cite: 1].
+AssetFlow is a centralized ERP platform designed to simplify and digitize how organizations track, allocate, and maintain their physical assets and shared resources. It aims to reduce manual tracking inefficiencies by enabling structured asset lifecycles, centralized resource booking, and real-time visibility into who holds what, where it is, and its condition.
 
 ## Core Features
 
-*   **Role-Based Access Control:** Secure workflows restricted to realistic roles (Admin, Asset Manager, Department Head, Employee) with strict authentication rules preventing self-elevation[cite: 1].
-*   **Asset Lifecycle Management:** Centralized tracking of assets across distinct states (Available, Allocated, Reserved, Under Maintenance, Lost, Retired, Disposed)[cite: 1].
-*   **Allocation & Transfer Engine:** Strict conflict rules that prevent double-allocation and automatically prompt structured transfer requests when items are already held[cite: 1].
-*   **Resource Booking Validation:** Time-slot booking of shared workspaces or equipment that actively validates and prevents calendar overlaps[cite: 1].
-*   **Structured Maintenance & Auditing:** Route repair requests through formal approval before work starts, and conduct scheduled audit cycles to flag missing or damaged items[cite: 1].
-*   **Operational Dashboard:** Real-time KPI summaries highlighting available assets, active bookings, and auto-flagging overdue returns[cite: 1].
+*   **Role-Based Access Control:** Secure workflows restricted to realistic roles (Admin, Asset Manager, Department Head, Employee) with strict authentication rules preventing self-elevation.
+*   **Asset Lifecycle Management:** Centralized tracking of assets across distinct states (Available, Allocated, Reserved, Under Maintenance, Lost, Retired, Disposed).
+*   **Allocation & Transfer Engine:** Strict conflict rules that prevent double-allocation and automatically prompt structured transfer requests when items are already held.
+*   **Resource Booking Validation:** Time-slot booking of shared workspaces or equipment that actively validates and prevents calendar overlaps.
+*   **Structured Maintenance & Auditing:** Route repair requests through formal approval before work starts, and conduct scheduled audit cycles to flag missing or damaged items.
+*   **Operational Dashboard:** Real-time KPI summaries highlighting available assets, active bookings, and auto-flagging overdue returns.
 
-## Tech Stack (Frontend)
+---
 
+## Tech Stack
+
+**Frontend:**
 *   **Framework:** React + TypeScript
 *   **Build Tool:** Vite
 *   **Styling:** Tailwind CSS
-*   **Linting & Compilation:** Oxlint / SWC or Oxc
+*   **Data Visualization:** Chart.js & React-Chartjs-2
+*   **Icons:** Lucide React
 
-*(Note: The AssetFlow backend architecture utilizes Node.js, Express, MySQL, JWT, and bcrypt for secure API delivery and relational data management).*
+**Backend:**
+*   **Environment:** Node.js
+*   **Framework:** Express.js
+*   **Database:** MySQL (Relational Schema with ACID-compliant transactions)
+*   **Security:** JWT (JSON Web Tokens) for session validation & bcrypt for password hashing
 
+---
+
+## System Architecture
+
+AssetFlow utilizes a decoupled client-server architecture. The frontend communicates with the backend via a secure REST API, where strict Role-Based Access Control (RBAC) middlewares guard sensitive endpoints before initiating ACID-compliant database transactions.
+
+```mermaid
+graph TD
+    subgraph Frontend Client
+        UI[React.js + Tailwind CSS]
+        Charts[Chart.js Dashboards]
+    end
+
+    subgraph Backend Server
+        Router[Express API Routes]
+        RBAC[JWT Security & Role Guards]
+        Controllers[Business Logic & Transactions]
+    end
+
+    subgraph Data Layer
+        DB[(MySQL Database)]
+    end
+
+    UI -->|RESTful HTTP Requests| Router
+    Charts -->|Fetch Aggregated Data| Router
+    Router --> RBAC
+    RBAC -->|Authorized Payload| Controllers
+    Controllers -->|SQL Queries & Validations| DB
+    DB -->|Result Sets| Controllers
 ---
 
 ## Getting Started
